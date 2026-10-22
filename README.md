@@ -1,49 +1,63 @@
-FX-Team
 Licznik WPF
-Opis projektu
+📌 Opis projektu
 
-FX-Team to projekt aplikacji desktopowej stworzonej w języku C# z wykorzystaniem technologii WPF (Windows Presentation Foundation). Aplikacja umożliwia zwiększanie i zmniejszanie wartości licznika za pomocą dwóch przycisków.
+Prosta aplikacja desktopowa stworzona w technologii WPF (Windows Presentation Foundation) z wykorzystaniem języka C# i języka znaczników XAML.
 
-Technologie
+Aplikacja umożliwia obsługę licznika za pomocą przycisków. Wartość licznika zmienia kolor w zależności od aktualnego wyniku, a po osiągnięciu wartości 10 lub większej wyświetlany jest specjalny komunikat.
+
+✨ Funkcjonalności
+➕ Dodawanie – zwiększa wartość licznika o 1.
+➖ Odejmowanie – zmniejsza wartość licznika o 1.
+🔄 Resetowanie – ustawia licznik na 0.
+🎨 Zmiana koloru licznika:
+Zielony – wartość większa od 0.
+Czerwony – wartość mniejsza od 0.
+Czarny – wartość równa 0.
+🏆 Komunikat o osiągnięciu celu – po uzyskaniu wartości 10 lub większej wyświetla się komunikat: „Brawo! Osiągnięto 10 lub więcej!”.
+🛠️ Technologie
 C#
-WPF
+WPF (Windows Presentation Foundation)
 XAML
+.NET
 Visual Studio
-Wygląd aplikacji
+🖥️ Interfejs aplikacji
 
-Interfejs aplikacji składa się z licznika wyświetlającego aktualną wartość oraz dwóch przycisków:
+Interfejs zawiera:
 
-Dodaj 1 – zwiększa wartość licznika o jeden.
-Odejmij 1 – zmniejsza wartość licznika o jeden.
+Aktualną wartość licznika.
+Przycisk „Dodaj 1”.
+Przycisk „Odejmij 1”.
+Przycisk „Resetuj licznik”.
+Pole komunikatu wyświetlanego po osiągnięciu wartości 10.
 
-Początkowa wartość licznika wynosi 0.
+Aplikacja posiada jasne tło i kolorowe przyciski, dzięki czemu interfejs jest prosty i czytelny.
 
-Opis plików
-MainWindow.xaml – odpowiada za wygląd okna aplikacji i rozmieszczenie kontrolek.
-MainWindow.xaml.cs – zawiera kod C# obsługujący przyciski i zmianę wartości licznika.
-Działanie programu
-
-W pliku MainWindow.xaml.cs zadeklarowana jest zmienna count, która przechowuje aktualną wartość licznika.
-
-Po kliknięciu przycisku Dodaj 1 metoda Increment_Click zwiększa wartość zmiennej o jeden i aktualizuje tekst wyświetlany w kontrolce CounterBlock.
-
-Po kliknięciu przycisku Odejmij 1 metoda Decrement_Click zmniejsza wartość licznika o jeden i aktualizuje wyświetlaną wartość.
-
-Do zamiany liczby na tekst wykorzystywana jest metoda ToString().
-
-Uruchomienie projektu
-Otwórz projekt w Visual Studio.
+🚀 Uruchomienie projektu
+Otwórz projekt w programie Visual Studio.
+Upewnij się, że masz zainstalowane odpowiednie środowisko .NET oraz obsługę WPF.
+Zbuduj projekt za pomocą opcji Build.
 Uruchom aplikację, naciskając F5.
-Kliknij Dodaj 1, aby zwiększyć licznik.
-Kliknij Odejmij 1, aby zmniejszyć licznik.
-Cel projektu
+📂 Struktura projektu
+WpfApp1/
+├── MainWindow.xaml       # Interfejs użytkownika
+├── MainWindow.xaml.cs    # Logika aplikacji w C#
+├── App.xaml              # Konfiguracja aplikacji
+├── App.xaml.cs           # Kod startowy aplikacji
+└── WpfApp1.csproj        # Plik projektu
 
-Celem projektu jest poznanie podstaw programowania w C# i WPF, tworzenia interfejsu w języku XAML, deklarowania zmiennych oraz obsługi zdarzeń kliknięcia przycisków.
 
-Dokumentacja
-Dokumentacja WPF
-Dokumentacja języka C#
-Kontrolka Button
-Kontrolka TextBlock
+Struktura może się różnić w zależności od konfiguracji projektu.
 
-Rok: 2026
+⚙️ Zasada działania
+
+Logika aplikacji znajduje się w pliku MainWindow.xaml.cs.
+
+Metoda UpdateCounter() aktualizuje wartość licznika, ustawia kolor tekstu oraz sprawdza, czy należy wyświetlić komunikat o osiągnięciu wartości 10.
+
+Increment_Click() – zwiększa licznik.
+Decrement_Click() – zmniejsza licznik.
+Reset_Click() – zeruje licznik.
+UpdateCounter() – aktualizuje interfejs aplikacji.
+🎯 Cel projektu
+
+Celem projektu jest poznanie podstaw tworzenia aplikacji desktopowych w WPF, obsługi zdarzeń przycisków, aktualizacji elementów interfejsu oraz wykorzystania instrukcji warunkowych w języku C#.
