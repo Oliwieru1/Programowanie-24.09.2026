@@ -1,80 +1,122 @@
+
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <algorithm>
-
 using namespace std;
 
-// Definicja struktury przechowuj¹cej dane osoby
-struct osoba {
-    string imie;
-    string nazwisko;
-    int nr;
+// Struktura jednego elementu drzewa binarnego
+struct drzewo {
+    int liczba;             // Liczba przechowywana w elemencie
+    drzewo *lewy, *prawy;   // Wskazniki na lewe i prawe poddrzewo
 };
 
-// Funkcja wczytuje dane z pliku "dane.txt" do tablicy (maksymalnie 30 rekordów) i zwraca ich liczbê
-int wczytajZPliku(osoba tab[], int maxRozmiar) {
-    ifstream plik("dane.txt"); // Otwieramy plik do odczytu
-    if (!plik.is_open()) {
-        cout << "Nie uda³o siê otworzyæ pliku: dane.txt" << endl;
-        return 0;
+// Zmienna globalna do liczenia usunietych elementow
+int usunieto = 0;
+
+// Funkcja dodajaca liczbe do drzewa
+void wstaw(drzewo *&d, int liczba) {
+
+    // Jesli miejsce jest puste, tworzymy nowy element
+    if (d == NULL) {
+        d = new drzewo;       // Przydzielenie pamieci
+        d->liczba = liczba;   // Przypisanie liczby
+        d->lewy = NULL;       // Brak lewego dziecka
+        d->prawy = NULL;      // Brak prawego dziecka
+        return;               // Koniec funkcji
     }
 
-    int licznik = 0;
-    // Wczytujemy dane dopóki nie przekroczymy limitu i plik ma kolejne rekordy
-    while (licznik < maxRozmiar && plik >> tab[licznik].imie >> tab[licznik].nazwisko >> tab[licznik].nr) {
-        licznik++;
-    }
+    // Jesli liczba jest wieksza od obecnej, idziemy w prawo
+    if (liczba > d->liczba)
+        wstaw(d->prawy, liczba);
 
-    plik.close(); // Zamykamy plik po zakoñczeniu wczytywania
-    return licznik; // Zwracamy ile rekordów faktycznie wczytano
+    // W przeciwnym przypadku idziemy w lewo
+    else
+        wstaw(d->lewy, liczba);
 }
 
-// Funkcja sortuje tablicê alfabetycznie wed³ug nazwiska
-void sortujPoNazwisku(osoba tab[], int rozmiar) {
-    sort(tab, tab + rozmiar, [](const osoba& a, const osoba& b) {
-        return a.nazwisko < b.nazwisko; // Porównujemy dwa nazwiska
-    });
-}
+// Funkcja wypisujaca liczby w kolejnosci rosnacej
+void wypisz(drzewo *d) {
 
-// Funkcja zapisuje posortowan¹ tablicê do pliku "wynik.txt"
-void zapiszDoPliku(const osoba tab[], int rozmiar) {
-    ofstream plik("wynik.txt"); // Otwieramy plik do zapisu
-    if (!plik.is_open()) {
-        cout << "Nie uda³o siê otworzyæ pliku do zapisu: wynik.txt" << endl;
+    // Jesli element nie istnieje, konczymy funkcje
+    if (d == NULL)
         return;
-    }
 
-    // Zapisujemy ka¿dy element tablicy do pliku w nowej linii
-    for (int i = 0; i < rozmiar; ++i) {
-        plik << tab[i].imie << " " << tab[i].nazwisko << " " << tab[i].nr << "\n";
-    }
+    // Najpierw wypisujemy lewe poddrzewo
+    wypisz(d->lewy);
 
-    plik.close(); // Zamykamy plik wynikowy
+    // Nastepnie wypisujemy liczbe z obecnego elementu
+    cout << d->liczba << " ";
+
+    // Na koncu wypisujemy prawe poddrzewo
+    wypisz(d->prawy);
+}
+
+// Funkcja usuwajaca cale drzewo z pamieci
+void usun(drzewo *d) {
+
+    // Jesli element nie istnieje, konczymy funkcje
+    if (d == NULL)
+        return;
+
+    // Najpierw usuwamy lewe poddrzewo
+    usun(d->lewy);
+
+    // Nastepnie usuwamy prawe poddrzewo
+    usun(d->prawy);
+
+    // Usuwamy obecny element z pamieci
+    delete d;
+
+    // Zwiekszamy licznik usunietych elementow
+    usunieto++;
 }
 
 int main() {
-    const int MAX_REKORDOW = 30;
-    osoba tablica[MAX_REKORDOW];
 
-    // Wczytanie danych z pliku "dane.txt" i zliczenie rekordów
-    int liczbaRekordow = wczytajZPliku(tablica, MAX_REKORDOW);
-    cout << "Wczytano rekordow z pliku dane.txt: " << liczbaRekordow << endl;
+    // Utworzenie pustego drzewa
+    drzewo *d = NULL;
 
-    // Jeœli wczytano jakiekolwiek dane, sortujemy je i zapisujemy
-    if (liczbaRekordow > 0) {
-        sortujPoNazwisku(tablica, liczbaRekordow); // Sortowanie alfabetyczne
-        zapiszDoPliku(tablica, liczbaRekordow);    // Zapis do wynik.txt
-        cout << "Posortowane dane zostaly zapisane do pliku wynik.txt." << endl;
+    // Otwarcie pliku z liczbami
+    ifstream plik("liczby.txt");
 
-        // Wyœwietlenie posortowanej listy w konsoli
-        cout << "\nPosortowana lista:\n";
-        for (int i = 0; i < liczbaRekordow; ++i) {
-            cout << i + 1 << ". " << tablica[i].imie << " " << tablica[i].nazwisko << " (Nr: " << tablica[i].nr << ")" << endl;
-        }
-    } else {
-        cout << "Brak danych do przetworzenia. Upewnij siê, ¿e plik 'dane.txt' istnieje i zawiera dane." << endl;
+    // Sprawdzenie, czy plik zostal otwarty
+    if (!plik) {
+        cout << "Blad otwarcia pliku!";
+        return 1;
     }
 
-    return 0;
+    int liczba;  // Zmienna przechowujaca wczytana liczbe
+    int ile = 0; // Licznik wczytanych liczb
+
+    // Wczytywanie liczb z pliku po jednej
+    while (plik >> liczba) {
+
+        // Dodanie wczytanej liczby do drzewa
+        wstaw(d, liczba);
+
+        // Zwiekszenie licznika wczytanych liczb
+        ile++;
+    }
+
+    // Zamkniecie pliku
+    plik.close();
+
+    // Wypisanie liczb z drzewa w kolejnosci rosnacej
+    cout << "Liczby posortowane: ";
+    wypisz(d);
+    cout << endl;
+
+    // Usuniecie calego drzewa z pamieci
+    usun(d);
+
+    // Ustawienie wskaznika na NULL
+    d = NULL;
+
+    // Wypisanie liczby wczytanych elementow
+    cout << "Liczba liczb w pliku: " << ile << endl;
+
+    // Wypisanie liczby usunietych elementow
+    cout << "Usunieto: " << usunieto
+         << " rekordow z pamieci" << endl;
+
+    return 0; // Zakonczenie programu
 }
